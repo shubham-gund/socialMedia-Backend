@@ -97,6 +97,26 @@ export const getSuggestedUsers = async (req: Request, res: Response) => {
   }
 };
 
+
+export const searchUser = async (req:Request, res:Response) => {
+  const { username } = req.query;
+
+  if (!username) {
+    return res.status(400).json({ message: 'Username query is required' });
+  }
+
+  try {
+    const users = await User.find({
+      username: { $regex: username, $options: 'i' } // Case-insensitive regex search
+    });
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
 export const updateUser = async (req: Request, res: Response) => {
   const { fullName, email, username, currentPassword, newPassword, bio, link } = req.body;
   let { profileImg, coverImg } = req.body;
