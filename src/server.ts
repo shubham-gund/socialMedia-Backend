@@ -12,6 +12,11 @@ import chatRoutes from './routes/chat.route.js';
  
 import connectMongoDB from "./db/connection.js";
 
+import messageRoutes from './routes/messages.route.js';
+
+
+import { createServer } from 'http';
+
 // dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -20,6 +25,7 @@ cloudinary.config({
 })
 
 const app = express();
+const httpServer = createServer(app);
 
 app.use(express.urlencoded({extended:true}))
 const allowedOrigins = [
@@ -51,6 +57,7 @@ app.use("/api/users",userRoutes);
 app.use("/api/posts",postRoutes);
 app.use("/api/notification",notificationRoutes);
 app.use('/api/chat', chatRoutes);
+app.use("/api/messages", messageRoutes);
 
 app.get("/",(req,res)=>{
   res.send("Hello World");

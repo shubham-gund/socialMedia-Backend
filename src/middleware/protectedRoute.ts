@@ -11,7 +11,6 @@ export const protectedRoute = async (req: Request, res: Response, next: NextFunc
   try {
     // const token = req.cookies.jwt_token;
     const token = req.headers.authorization;  // token
-    console.log(token)
     if (!token) {
       return res.status(401).json({ message: "Unauthorized token not found" });
     }
