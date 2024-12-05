@@ -27,7 +27,10 @@ cloudinary.config({
 const app = express();
 const httpServer = createServer(app);
 
-app.use(express.urlencoded({extended:true}))
+// Custom JSON parsing middleware
+app.use(express.json({ limit: "5mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
 const allowedOrigins = [
   'https://be-social-eta.vercel.app',
   'https://be-social-git-main-shubham-gunds-projects.vercel.app',
@@ -40,17 +43,6 @@ app.use(cors(
   }
 ));
 app.use(cookieParser())
-// Custom JSON parsing middleware
-app.use(express.json({
-  verify: (req: express.Request, res: express.Response, buf: Buffer) => {
-    try {
-      JSON.parse(buf.toString());
-    } catch (e) {
-      res.status(400).json({ error: 'Invalid JSON' });
-      throw new Error('Invalid JSON');
-    }
-  }
-}));
 
 app.use("/api/auth",authRoutes);
 app.use("/api/users",userRoutes);
