@@ -14,6 +14,7 @@ const io = new SocketIOServer(server, {
       'https://be-social-git-main-shubham-gunds-projects.vercel.app',
       'http://localhost:5173',
     ],
+    credentials: true,
   },
 });
 
