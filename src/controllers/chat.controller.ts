@@ -25,7 +25,7 @@ export const chatWithAI =  async (req: Request, res: Response) => {
     const lastMessage = messages[messages.length - 1].content;
 
     // Initialize Gemini model
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     // Convert ChatMessage[] to Content[]
     const history = messages.slice(0, -1).map(m => ({
