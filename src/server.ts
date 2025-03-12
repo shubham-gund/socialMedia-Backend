@@ -1,55 +1,37 @@
-import express from "express";
-import 'dotenv/config';
-import { v2 as cloudinary } from "cloudinary";
+import express, { Request, Response } from "express";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import cors from "cors";
-
+import { app, server } from "./service/socket.js";
 import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/messages.route.js";
 import userRoutes from "./routes/user.route.js";
-import postRoutes from "./routes/post.route.js";
-import notificationRoutes from "./routes/notification.route.js";
-import chatRoutes from './routes/chat.route.js';
-import messageRoutes from './routes/messages.route.js';
+import connectToMongoDB from "./db/connection.js";
 
-import connectMongoDB from "./db/connection.js";
+dotenv.config();
 
-// Import the Socket.IO server from socket.ts
-import { app,server } from './service/socket.js'; 
+const PORT = process.env.PORT || 3000;
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-// Allowing CORS for frontend applications
-const allowedOrigins = [
-  'https://be-social-eta.vercel.app',
-  'https://be-social-git-main-shubham-gunds-projects.vercel.app',
-  'http://localhost:5173',
-];
-
+// Middleware
+app.use(express.json()); // Parse JSON bodies
+app.use(cookieParser()); // Parse Cookie header and populate req.cookies
 app.use(cors({
-  origin: allowedOrigins,
+  origin: ["http://localhost:5173", "https://be-social-eta.vercel.app"],
   credentials: true,
 }));
 
-app.use(express.json({ limit: "5mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-
-// API Routes
+// Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/posts", postRoutes);
-app.use("/api/notification", notificationRoutes);
-app.use('/api/chat', chatRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/users", userRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
+// Health check endpoint
+app.get("/health", (_: Request, res: Response) => {
+  res.status(200).json({ status: "OK" });
 });
 
-server.listen(3000, () => {
-  console.log("Server running on port 3000");
-  connectMongoDB();
+server.listen(PORT, () => {
+  connectToMongoDB();
+  console.log(`Server Running on Port ${PORT}`);
 });
 

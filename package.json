@@ -1,11 +1,13 @@
 {
   "name": "twitter",
   "version": "1.0.0",
-  "main": "tsc -b && dist/server.js",
+  "main": "dist/server.js",
   "scripts": {
     "build": "tsc -b",
     "dev": "npm run build && nodemon dist/server.js",
-    "start": "npm run build && node dist/server.js"
+    "start": "node dist/server.js",
+    "vercel-build": "npm run build",
+    "test:gemini": "npm run build && node dist/test/testGemini.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "@types/mongoose": "^5.11.97",
+    "axios": "^1.8.3",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.2.0",
     "cookie-parser": "^1.4.6",
